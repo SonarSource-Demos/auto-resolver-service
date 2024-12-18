@@ -1,4 +1,5 @@
 {
-  "service_name": "resolver",
-  "environment": "local"
+  "service_name": "auto-resolver",
+  "environment": "local",
+  "sonarqube_url": "http://sonarqube:9000"
 }
