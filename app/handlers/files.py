@@ -41,7 +41,7 @@ async def fix_file(repository, source_branch, file, issues):
     available_fixes = await get_issue_fixes(issues=issues)
     if available_fixes:
         updated = len(available_fixes)
-    message, results = apply_fixes(file=file, content=content, fixes=available_fixes)
+    message, results = apply_fixes(content=content, fixes=available_fixes)
     return updated, file, sha, message, results
 
 
@@ -59,7 +59,7 @@ async def get_issue_fixes(issues):
     return fixes
 
 
-def apply_fixes(file, content, fixes):
+def apply_fixes(content, fixes):
     changed_lines = set()
     content_map = {int(idx+1): line for idx, line in enumerate(content.splitlines())}
     messages = list()
@@ -87,7 +87,7 @@ async def create_pull_request(repository, task_id, source_branch, pull_request, 
     pr_messages = [
 
     ]
-    unused_var = 'thing'
+
     for file, update in updates.items():
         log_event(level='WARNING', status='failure', process_type='update_file',
                   payload=dict(file=file, keys=file))
