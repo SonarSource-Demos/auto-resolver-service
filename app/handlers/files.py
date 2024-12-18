@@ -83,7 +83,7 @@ async def create_pull_request(repository, task_id, source_branch, pull_request, 
     pr_messages = [
 
     ]
-    unused_var = 'thing'
+
     for file, update in updates.items():
         repo.update_file(
             path=file,
