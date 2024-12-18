@@ -1,0 +1,13 @@
+pytest
+orjson
+pytest-cov>=2.8.1
+uvicorn[standard]
+gunicorn
+httpx
+respx
+uvloop
+pytest-asyncio
+parrot-api-core>=0.1.22
+greenlet
+gevent
+pygithub

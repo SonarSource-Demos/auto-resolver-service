@@ -1,0 +1,81 @@
+openapi: 3.0.0
+info:
+  title: resolver API
+  version: 1.0.0
+servers:
+  - url: /v1/
+paths:
+  /webhooks:
+    post:
+      operationId: routes.v1.webhooks.process_webhook_request
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                serverUrl:
+                  type: string
+                taskId:
+                  type: string
+                status:
+                  type: string
+                analysedAt:
+                  type: string
+                revision:
+                  type: string
+                project:
+                  type: object
+                  properties:
+                    key:
+                      type: string
+                    name:
+                      type: string
+                    url:
+                      type: string
+                properties:
+                  type: object
+                qualityGate:
+                  type: object
+                  properties:
+                    conditions:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          errorThreshold:
+                            type: string
+                          metric:
+                            type: string
+                          onLeakPeriod:
+                            type: boolean
+                          operator:
+                            type: string
+                          status:
+                            type: string
+                          value:
+                            type: string
+                    name:
+                      type: string
+                    status:
+                      type: string
+      responses:
+        200:
+          description: Webhook Accepted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  isActive:
+                    type: boolean
+                  response:
+                    type: object
+                    properties:
+                      taskId:
+                        type: string
+                      issueCount:
+                        type: integer
+                      fileCount:
+                        type: integer
+
