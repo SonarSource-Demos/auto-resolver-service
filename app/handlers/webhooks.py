@@ -20,14 +20,14 @@ async def process_webhook(taskId, status, project, qualityGate=None, **kwargs):
     results['source_branch'] = pull_request[0]['branch']
     results['target_branch'] = pull_request[0]['base']
     results['pull_request'] = pull_request[0]['key']
-    results['file_mapping'] = generate_file_issue_mapping(project_key=project, issues=issues)
+    results['file_mapping'] = generate_file_issue_mapping(issues=issues)
     return results
 
 
 from collections import defaultdict
 
 
-def generate_file_issue_mapping(project_key, issues):
+def generate_file_issue_mapping(issues):
     files = defaultdict(list)
     for issue in issues:
         files[issue['component'].split(':')[-1]].append(issue)
