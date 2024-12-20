@@ -34,14 +34,30 @@ async def get_branch(repository, branch_name, host):
     return js
 
 
+async def get_commit(repository, commit_sha, host):
+    url = f'{host}/repos/{repository}/git/commits/{commit_sha}'
+    _, js = await safe_json_request(url=url, headers=generate_headers(), method='GET')
+    return js
+
+
+async def validate_latest_commit(repository, branch_name, host, branch, commit_hash):
+    valid = branch['commit']['sha'] == commit_hash
+    if not valid:
+        commit = await get_commit(repository=repository, commit_sha=commit_hash, host=host)
+        if commit['sha'] == commit_hash:
+            valid = any([i['sha'] == commit_hash for i in commit['parents']])
+    return valid
+
+
 async def create_branch(repository, branch_name, base_branch_name, host):
     url = f'{host}/repos/{repository}/git/refs'
     base_branch = await get_branch(host=host, repository=repository, branch_name=base_branch_name)
     payload = {
         "ref": f"refs/heads/{branch_name}",
-        "sha": base_branch['sha']
+        "sha": base_branch['commit']['sha']
     }
     _, js = await safe_json_request(url=url, headers=generate_headers(), method='POST', json=payload)
+    js['name'] = branch_name
     return js
 
 

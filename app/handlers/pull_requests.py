@@ -2,7 +2,9 @@ from handlers.files import map_issues_to_files, fix_file
 from handlers.sonarqube import get_binding, get_issues
 from handlers.integrations import get_integration, github as github_integration
 from asyncio import gather
+
 PR_BRANCH_NAME_TEMPLATE = 'sonar/autofix-pr-{pull_request}-{task_id}'
+
 
 async def fix_pr_issues(server_url, task_id, project_key, pull_request, commit_hash, source_branch):
     valid, binding, integration, integration_url, branch = await validate_task(
@@ -62,7 +64,8 @@ async def create_or_update_pull_request(integration, integration_url, pull_reque
             body=fix_message,
         )
     else:
-        pr = await github_integration.get_pull_request(repository=repository, pr_name=pull_request, host=integration_url)
+        pr = await github_integration.get_pull_request(repository=repository, pr_name=pull_request,
+                                                       host=integration_url)
         await github_integration.update_pull_request(
             host=integration_url,
             repository=repository,
@@ -72,7 +75,7 @@ async def create_or_update_pull_request(integration, integration_url, pull_reque
 
 
 async def create_pr_branch(integration, integration_url, repository, name, branch):
-    if not branch.startswith('sonar/autofix-pr-'):
+    if not branch['name'].startswith('sonar/autofix-pr-'):
         branch = await integration.create_branch(
             host=integration_url, repository=repository, branch_name=name, base_branch_name=branch['name']
         )
@@ -90,6 +93,9 @@ async def validate_task(project_key, server_url, source_branch, commit_hash):
         repository=binding['repository'],
         branch_name=source_branch
     )
-    if branch.get('commit', dict()).get('sha') != commit_hash:
+    unused_var = ""
+    if not branch or not await integration.validate_latest_commit(
+            repository=binding['repository'], branch_name=source_branch,
+            host=integration_url, branch=branch, commit_hash=commit_hash):
         valid = False
     return valid, binding, integration, integration_url, branch
