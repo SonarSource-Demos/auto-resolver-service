@@ -1,1 +1,2 @@
 deployment/settings/secrets/*
+local.env
