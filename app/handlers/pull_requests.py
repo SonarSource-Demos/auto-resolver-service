@@ -48,6 +48,12 @@ async def fix_pr_issues(server_url, task_id, project_key, pull_request, commit_h
             pull_request=pull_request,
             fixes=fixes
         )
+    elif pr_branch['name'] != branch['name']:
+        await integration.delete_branch(
+            host=integration_url,
+            repository=binding['repository'],
+            branch_name=pr_branch['name']
+        )
 
 
 async def create_or_update_pull_request(integration, integration_url, pull_request, repository, pr_branch_name,
@@ -94,7 +100,10 @@ async def validate_task(project_key, server_url, source_branch, commit_hash):
     )
 
     if not branch or not await integration.validate_latest_commit(
-            repository=binding['repository'], branch_name=source_branch,
-            host=integration_url, branch=branch, commit_hash=commit_hash):
+            repository=binding['repository'],
+            host=integration_url,
+            branch=branch,
+            commit_hash=commit_hash
+    ):
         valid = False
     return valid, binding, integration, integration_url, branch

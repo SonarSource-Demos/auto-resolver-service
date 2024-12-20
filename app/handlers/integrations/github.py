@@ -95,3 +95,8 @@ async def update_pull_request(repository, pr_name, body, host):
     url = f'{host}/repos/{repository}/pulls/{pr_name}'
     _, js = await safe_json_request(url=url, headers=generate_headers(), method='PATCH', json=dict(body=body))
     return js
+
+async def delete_branch(repository, branch_name, host):
+    url = f'{host}/repos/{repository}/git/refs/heads/{branch_name}'
+    _, js = await safe_json_request(url=url, headers=generate_headers(), method='DELETE')
+    return js
