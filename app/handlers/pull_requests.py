@@ -93,7 +93,7 @@ async def validate_task(project_key, server_url, source_branch, commit_hash):
         repository=binding['repository'],
         branch_name=source_branch
     )
-    unused_var = ""
+
     if not branch or not await integration.validate_latest_commit(
             repository=binding['repository'], branch_name=source_branch,
             host=integration_url, branch=branch, commit_hash=commit_hash):
