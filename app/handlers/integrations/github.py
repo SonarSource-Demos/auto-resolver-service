@@ -40,7 +40,7 @@ async def get_commit(repository, commit_sha, host):
     return js
 
 
-async def validate_latest_commit(repository, branch_name, host, branch, commit_hash):
+async def validate_latest_commit(repository, host, branch, commit_hash):
     valid = branch['commit']['sha'] == commit_hash
     if not valid:
         commit = await get_commit(repository=repository, commit_sha=commit_hash, host=host)
