@@ -52,11 +52,10 @@ async def fix_pr_issues(server_url, task_id, project_key, pull_request, commit_h
 
 async def create_or_update_pull_request(integration, integration_url, pull_request, repository, pr_branch_name,
                                         target_branch_name, fixes):
-    fix_message = '\n'.join([f"Fixing {i['fix_count']} issues in {['file_path']}" for i in fixes])
+    fix_message = '\n'.join([f"Fixing {i['fix_count']} issues in {i['file_path']}" for i in fixes])
     if pr_branch_name != target_branch_name:
         await integration.create_pull_request(
             host=integration_url,
-            integration_url=integration_url,
             repository=repository,
             source_branch=pr_branch_name,
             target_branch=target_branch_name,

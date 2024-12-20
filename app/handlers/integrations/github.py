@@ -44,8 +44,7 @@ async def validate_latest_commit(repository, branch_name, host, branch, commit_h
     valid = branch['commit']['sha'] == commit_hash
     if not valid:
         commit = await get_commit(repository=repository, commit_sha=commit_hash, host=host)
-        if commit['sha'] == commit_hash:
-            valid = any([i['sha'] == commit_hash for i in commit['parents']])
+        valid = any([i['sha'] == branch['commit']['sha'] for i in commit['parents']])
     return valid
 
 
@@ -65,11 +64,12 @@ async def update_file(repository, message, branch_name, file_path, content: str,
     url = f'{host}/repos/{repository}/contents/{quote(file_path)}'
     payload = {
         "message": message,
-        "content": b64encode(content.encode('utf-8')),
+        "content": b64encode(content.encode('utf-8')).decode('utf-8'),
         "sha": sha,
         "branch": branch_name
     }
-    _, js = await safe_json_request(url=url, headers=generate_headers(), method='PUT', json=payload)
+    _, js = await safe_json_request(url=url, headers=generate_headers(), method='PUT', json=payload,
+                                    log_attributes=dict(file_path=file_path))
     return js
 
 
