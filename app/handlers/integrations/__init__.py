@@ -5,5 +5,4 @@ MAPPING = {
 }
 
 async def get_integration(binding):
-    return MAPPING.get(binding.get('alm'), github_integration), 'https://api.github.com'
-
+    return MAPPING.get(binding.get('alm')), binding.get('url')
