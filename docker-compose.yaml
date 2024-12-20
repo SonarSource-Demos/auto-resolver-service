@@ -1,14 +1,11 @@
-version: '3.7'
-
 services:
   web:
     build: .
     command: bash /apps/startup/app.sh
+    env_file:
+      - local.env
     ports:
       - "8086:8080"
-    environment:
-      GOOGLE_APPLICATION_CREDENTIALS: "/apps/client.json"
-      PUBSUB_EMULATOR_HOST: "pubsub:8432"
     volumes:
       - ./deployment/settings/env/:/apps/settings/env/
       - ./deployment/settings/secrets/:/apps/settings/secrets/
@@ -17,8 +14,6 @@ services:
     build: .
     command: bash /apps/startup/test.sh
     environment:
-      GOOGLE_APPLICATION_CREDENTIALS: "/apps/client.json"
-      PUBSUB_EMULATOR_HOST: "pubsub:8432"
       MIN_COVERAGE: 90
     volumes:
       - ./deployment/settings/env:/apps/settings/env
