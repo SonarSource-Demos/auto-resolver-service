@@ -1,9 +1,10 @@
 # .github/workflows/app.yaml
 name: Test
 on:
-  pull_request:
+  push:
     branches:
-      - 'main'
+      - "main"
+  pull_request:
 jobs:
   build:
     name: Build

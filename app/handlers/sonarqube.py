@@ -17,7 +17,7 @@ async def get_binding(server_url, project_key):
     return js
 
 
-async def get_pull_request(server_url, project_key, pull_request_id):
+async def get_pull_request(server_url, project_key, pull_request_id, **unused_kwargs):
     pull_request = dict()
     status, js = await safe_json_request(
         method='get',
